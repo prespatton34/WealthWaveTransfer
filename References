@@ -1,0 +1,218 @@
+!pip install torch torchvision
+
+import numpy as np
+import torch
+
+np.random.seed(42)
+num_samples = 1000
+
+age = np.random.randint(18, 70, size=num_samples)
+income = np.random.normal(50000, 15000, size=num_samples)
+investments = np.random.normal(10000, 5000, size=num_samples)
+
+wealth = 0.4 * age + 0.5 * (income / 1000) + 0.3 * (investments / 1000) + np.random.normal(0, 5, size=num_samples)
+
+X = torch.tensor(np.column_stack((age, income, investments)), dtype=torch.float32)
+y = torch.tensor(wealth, dtype=torch.float32).view(-1, 1)
+
+import torch.nn as nn
+import torch.optim as optim
+
+class WealthModel(nn.Module):
+    def __init__(self):
+        super(WealthModel, self).__init__()
+        self.fc1 = nn.Linear(3, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, 1)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+model = WealthModel()
+
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+num_epochs = 100
+
+for epoch in range(num_epochs):
+      model.train()
+
+      outputs = model(X)
+      loss = criterion(outputs, y)
+
+      optimizer.zero_grad()
+      loss.backward()
+      optimizer.step()
+
+      if (epoch+1) % 10 == 0:
+          print(f'Epoch [{epoch+1}/{num_epochs}], Loss:{loss.item():.4f}')
+
+model.eval()
+with torch.no_grad():
+      predicted = model(X)
+
+import matplotlib.pyplot as plt
+plt.scatter(y.numpy(), predicted.numpy(), alpha=0.5)
+plt.xlabel('True Wealth')
+plt.ylabel('Predicted Wealth')
+plt.title('True vs Predicted Wealth')
+plt.plot([y.min(), y.max()], [y.min(), y.max()], '--', color='red')
+plt.show()
+
+class ObfuscationLayer(nn.Module):
+    def __init__(self):
+        super(ObfuscatoinLayer, self).__init__()
+
+    def forward(self, x):
+
+        noise = torch.normal(0, 0.1, x.size()).to(x.device)
+        return x + noise
+
+class EnhancedWealthModel(nn.Module):
+      def __init__(self):
+          super(EnhancedWealthModel, self).__init__()
+          self.obfuscatoin = ObfuscatoinLayer()
+          self.fc1 = nn.Linear(3, 128)
+          self.fc2 = nn.Linear(128, 64)
+          self.fc3 = nn.Linear(64, 32)
+          self.fc4 = nn.Linear(32, 1)
+
+      def forward(self, x):
+          x = self.obfuscation(x)
+          x = torch.relu(self.fc1(x))
+          x = torch.relu(self.fc2(x))
+          x = torch.relu(self.fc3(x))
+          x = self.fc4(x)
+          return x
+
+model = EnhancedWealthModel()
+
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model.parameters(), lr=0.001.)
+num_epochs = 100
+
+for epoch in range(num_epochs):
+      model.train()
+
+      outputs = model(X)
+      loss = criterion(outputs, y)
+
+      optimizer.zero_grad()
+      loss.backward()
+      optimizer.step()
+
+      if (epoch + 1) % 10 == 0:
+          print(f'Epoch [{epoch + 1}/{num_epochs}], Loss: {loss.item():.4f}')
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import matplotlib.pyplot as plt
+import numpy as np
+
+grid_size = 20
+
+def generate_wealth_waveform(grid_size):
+      x = np.linspace(0, 2 * np.pi, grid_size)
+      wealth_waveform = np.sin(x)
+      return wealth_waveform
+
+wealth_waveform = generate_wealth_waveform(grid_size)
+wealth_data = np.tile(wealth_waveform, (grid_size, 1))
+
+wealth_data = torch.tensor(wealth_data, dtype=torch.float32)
+
+class WealthTransferNet(nn.Module):
+    def __init__(self):
+        super(WealthTransferNet, self).__init__()
+        self.fc1 = nn.Linear(grid_size * grid_size, 128)
+        self.fc2 = nn.Linear(128, grid_size * grid_size)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
+
+net = WealthTransferNet()
+criterion = nn.MSELoss()
+optimizer = optim.Adam(net.parameters(), lr=0.01)
+
+target_account = torch.zeros((grid_size, grid_size))
+target_account[-5:, -5:] = 1
+
+input_data = wealth_data.view(-1)
+target_data = target_account.view(-1)
+
+epochs = 500
+for epoch in range(epochs):
+    optimizer.zero_grad()
+    output = net(input_data)
+    loss = criterion(output, target_data)
+    loss.backward()
+    optimizer.step()
+
+output_grid = output.detech().view(grid_size, grid_size)
+
+fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+axes[0].imshow(wealth_data, cmap='viridis')
+axes[0].set_title('Original Wealth Waveform')
+axes[1].imshow(target_account, cmap='viridis')
+axes[1].set_title('Target Account Location')
+axes[2].imshow(output_grid, cmap='viridis')
+axes[2].set_title('Transferred Wealth to Target')
+plt.show()
+
+import torch
+import torch.nn as nn
+import torch.optim as optim
+import matplotlib.pyplot as plt
+import numpt as np
+
+waveform_size = 100
+
+def generate_wealth_waveform(waveform_size): 
+    x = np.linspace(0, 2 * np.pi, waveform_size)
+    wealth_waveform = np.sin(x)
+    return wealth_waveform
+
+wealth_waveform = generate_wealth_waveform(waveform_size)
+wealth_data = torch.tensor(wealth_waveform, dtype=torch.float32)
+
+class WealthTransferNet(nn.Module):
+    def __init__(self):
+        super(WealthTransferNet, self).__init__()
+        self.fc1 = nn.Linear(waveform_size, 64)
+        self.fc2 = nn.Linear(64, waveform_size)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
+
+net = WeatlhTransferNet()
+criterion = nn.MSELoss()
+optimizer = optim.Adam(net.parameters(), lr=0.01)
+
+target_account = torch.zeros(waveform_size)
+target_account[-10:] = 1
+
+epochs = 1000
+for epoch in range(epochs):
+optimizer.zero_grad()
+output = net(wealth_data)
+loss = criterion(output, target_account)
+loss.backward()
+optimizer.step()
+
+output_waveform = output.detach().numpy()
+
+fig, ax = plt.subplot(figsiz(10, 5))
+ax.plot(wealth_data.numpy(), label='Original Wealth Waveform", linestyle="__")
+ax.plot(target_account.numpy(), label="Target Account", linestyle=":")
+ax.plot(output_waveform, label="Transferred Wealth Waveform")
+ax.set_title('WealthWaveTransfer')
+ax.legend()
+plt.show()
